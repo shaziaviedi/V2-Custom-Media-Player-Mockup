@@ -1,7 +1,5 @@
 # V2-Custom-Media-Player-Mockup
 
-# V2 Custom Media Player — UI/UX Mockup
-
 This repository contains an interactive **UI/UX mockup** for a custom media player designed as part of an internship assignment for **V2 Indonesia**.
 
 The project focuses on **interface layout, interaction design, and state-based behavior**, rather than full production media playback.
