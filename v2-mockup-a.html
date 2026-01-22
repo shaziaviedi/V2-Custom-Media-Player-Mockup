@@ -1,0 +1,1391 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>V2 Style A — Final Mock</title>
+
+  <!-- Brand fonts (Orbitron for techno display, Inter for UI) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Orbitron:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --page:#060606;
+      --canvas:#070707;
+
+      --red:#EC1E24;
+      --white:#ffffff;
+
+      --glass:rgba(255,255,255,.06);
+      --glass2:rgba(255,255,255,.04);
+      --stroke:rgba(255,255,255,.14);
+      --stroke2:rgba(255,255,255,.22);
+
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.70);
+      --muted2:rgba(255,255,255,.52);
+
+      --safeX:72px;
+      --topBarY:56px;
+
+      --radiusLg:28px;
+      --radiusMd:18px;
+      --radiusSm:14px;
+
+      --shadow: 0 28px 90px rgba(0,0,0,.55);
+      --shadowSoft: 0 18px 60px rgba(0,0,0,.45);
+    }
+
+    html,body{height:100%;}
+    body{
+      margin:0;
+      background:var(--page);
+      color:var(--text);
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      display:grid;
+      place-items:center;
+      overflow:hidden; /* kiosk */
+    }
+
+    /* subtle vignette + red atmosphere */
+    body:before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:
+        radial-gradient(1200px 820px at 80% 10%, rgba(236,30,36,.12), transparent 62%),
+        radial-gradient(1100px 760px at 20% 92%, rgba(255,255,255,.06), transparent 60%),
+        radial-gradient(900px 600px at 50% 50%, rgba(0,0,0,.0), rgba(0,0,0,.55));
+      pointer-events:none;
+    }
+
+    .screen{
+      width:1080px;
+      height:1920px;
+      background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+      border:1px solid rgba(255,255,255,.08);
+      position:relative;
+      overflow:hidden;
+      box-shadow:0 40px 120px rgba(0,0,0,.65);
+    }
+
+    /* ---------------- TOP BRAND BAR ---------------- */
+    .brandbar{
+      position:absolute;
+      top:var(--topBarY);
+      left:var(--safeX);
+      right:var(--safeX);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      z-index:50;
+      gap:18px;
+    }
+
+    .brandWrap{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      min-width:360px;
+    }
+
+    /* Logo mark */
+    .logoMark{
+      width:56px;
+      height:56px;
+      background:var(--red);
+      border-radius:0;
+      display:grid;
+      place-items:center;
+      flex:0 0 auto;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.10) inset,
+        0 18px 40px rgba(236,30,36,.18);
+    }
+    .logoV2{
+      font-family:Orbitron, Inter, sans-serif;
+      font-weight:800;
+      font-size:26px;
+      letter-spacing:.04em;
+      color:#fff;
+      line-height:1;
+      transform:translateY(1px);
+    }
+
+    .brand{
+      font-family:Orbitron, Inter, sans-serif;
+      font-size:32px;
+      font-weight:700;
+      letter-spacing:6px;
+      text-transform:uppercase;
+      color:var(--white);
+      white-space:nowrap;
+    }
+
+    .rightActions{
+      display:flex;
+      gap:14px;
+      align-items:center;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      appearance:none;
+      border:1px solid var(--stroke);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      color:var(--text);
+      padding:12px 16px;
+      border-radius:14px;
+      font-size:14px;
+      font-weight:500;
+      cursor:pointer;
+      transition:transform .12s ease, border-color .14s ease, box-shadow .14s ease, background .14s ease, opacity .14s ease;
+      user-select:none;
+      white-space:nowrap;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow:0 10px 26px rgba(0,0,0,.35);
+    }
+    .btn:hover{
+      border-color:rgba(236,30,36,.55);
+      box-shadow:0 0 0 1px rgba(236,30,36,.20), 0 14px 30px rgba(0,0,0,.45);
+    }
+    .btn:active{ transform:translateY(1px); }
+    .btn[disabled]{ opacity:.45; cursor:not-allowed; }
+
+    .btn-primary{
+      border-color:rgba(236,30,36,.75);
+      box-shadow:0 0 0 1px rgba(236,30,36,.22), 0 14px 30px rgba(0,0,0,.45);
+    }
+
+    .badge{
+      border:1px solid var(--stroke);
+      background:rgba(0,0,0,.25);
+      padding:10px 12px;
+      border-radius:14px;
+      font-size:13px;
+      color:var(--muted);
+      user-select:none;
+      white-space:nowrap;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    /* ---------------- VIEW BASE ---------------- */
+    .view{
+      position:absolute;
+      inset:0;
+      display:none;
+    }
+    .view.isActive{ display:block; }
+
+    /* ---------------- HOME (Idle / Attractor) ---------------- */
+    #homeView .homeCenter{
+      position:absolute;
+      left:var(--safeX);
+      right:var(--safeX);
+      top:250px;
+      bottom:250px;
+      display:grid;
+      place-items:center;
+      text-align:center;
+    }
+
+    .homeCard{
+      width:100%;
+      max-width:760px;
+      padding:34px 34px 30px 34px;
+      border-radius:28px;
+      background:
+        radial-gradient(900px 240px at 50% 0%, rgba(236,30,36,.14), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .homeEyebrow{
+      margin:0 0 12px 0;
+      font-size:12px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.60);
+    }
+
+    .homeTitle{
+      font-family:Orbitron, Inter, sans-serif;
+      font-size:34px;
+      font-weight:700;
+      margin:0 0 12px 0;
+      letter-spacing:.04em;
+      color:rgba(255,255,255,.95);
+    }
+
+    .homeSub{
+      margin:0;
+      color:rgba(255,255,255,.72);
+      line-height:1.65;
+      font-size:15px;
+      max-width:620px;
+      margin-inline:auto;
+    }
+
+    .idleBar{
+      margin-top:26px;
+      height:10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.12);
+      overflow:hidden;
+    }
+    .idleFill{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg, rgba(236,30,36,.35), rgba(236,30,36,.95), rgba(236,30,36,.35));
+      animation: idlePulse 6s linear infinite;
+    }
+    @keyframes idlePulse{
+      0%{ width:0%; }
+      60%{ width:100%; }
+      100%{ width:0%; }
+    }
+
+    .homeActions{
+      margin-top:22px;
+      display:flex;
+      gap:14px;
+      justify-content:center;
+      flex-wrap:wrap;
+    }
+
+    .homeHint{
+      margin-top:16px;
+      font-size:13px;
+      color:rgba(255,255,255,.52);
+    }
+
+    /* ---------------- GALLERY ---------------- */
+    #galleryView{ z-index:10; }
+
+    .galleryTopRow{
+      position:absolute;
+      top:160px;
+      left:var(--safeX);
+      right:var(--safeX);
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      z-index:25;
+      gap:18px;
+    }
+
+    .filtersRow{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
+      max-width:720px;
+    }
+
+    .pill{
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.18);
+      padding:10px 14px;
+      border-radius:999px;
+      font-size:13px;
+      color:rgba(255,255,255,.70);
+      cursor:pointer;
+      user-select:none;
+      transition:border-color .14s ease, box-shadow .14s ease, transform .12s ease;
+      white-space:nowrap;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .pill:hover{
+      border-color:rgba(236,30,36,.55);
+      box-shadow:0 0 0 1px rgba(236,30,36,.16);
+    }
+    .pill.isActive{
+      color:rgba(255,255,255,.95);
+      border-color:rgba(236,30,36,.75);
+      box-shadow:0 0 18px rgba(236,30,36,.10);
+    }
+
+    .galleryModeRow{
+      display:flex;
+      gap:14px;
+      align-items:center;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+    }
+
+    .multiBar{
+      position:absolute;
+      top:230px;
+      left:var(--safeX);
+      right:var(--safeX);
+      display:none;
+      align-items:center;
+      justify-content:space-between;
+      z-index:26;
+      padding:14px 16px;
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:18px;
+      color:rgba(255,255,255,.72);
+      gap:14px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow:var(--shadowSoft);
+    }
+    .multiBar strong{ color:rgba(255,255,255,.95); }
+    .multiActions{ display:flex; gap:12px; flex-wrap:wrap; }
+
+    .galleryScroll{
+      position:absolute;
+      left:var(--safeX);
+      right:var(--safeX);
+      top:320px;
+      bottom:86px;
+      overflow-y:auto;
+      overflow-x:hidden;
+      padding-right:12px;
+      z-index:15;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      border-radius:20px;
+    }
+
+    .galleryScroll::-webkit-scrollbar{ width:10px; }
+    .galleryScroll::-webkit-scrollbar-track{ background:rgba(255,255,255,.06); border-radius:999px; }
+    .galleryScroll::-webkit-scrollbar-thumb{
+      background:rgba(255,255,255,.14);
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:36px;
+      padding-bottom:240px;
+    }
+
+    .thumb{
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.14);
+      background:
+        radial-gradient(700px 220px at 50% 0%, rgba(236,30,36,.10), transparent 62%),
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+      padding:20px;
+      cursor:pointer;
+      position:relative;
+      user-select:none;
+      min-height:320px;
+      transition:transform .12s ease, border-color .14s ease, box-shadow .14s ease;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .thumb:hover{
+      transform:translateY(-3px);
+      border-color:rgba(236,30,36,.55);
+      box-shadow:0 18px 48px rgba(0,0,0,.50), 0 0 0 1px rgba(236,30,36,.16);
+    }
+
+    .thumbLabel{
+      font-family:Orbitron, Inter, sans-serif;
+      color:rgba(255,255,255,.88);
+      letter-spacing:.12em;
+      font-size:14px;
+      text-transform:uppercase;
+    }
+
+    .check{
+      position:absolute;
+      top:18px;
+      left:18px;
+      width:28px;
+      height:28px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(0,0,0,.25);
+      display:none;
+      place-items:center;
+      font-size:14px;
+      color:#111;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .thumb.isSelectable .check{ display:grid; }
+    .thumb.isSelected .check{
+      background:rgba(236,30,36,.95);
+      color:#fff;
+      border-color:rgba(236,30,36,.95);
+      box-shadow:0 0 18px rgba(236,30,36,.22);
+    }
+    .thumb.isSelected{
+      border-color:rgba(236,30,36,.85);
+      box-shadow:0 0 0 2px rgba(236,30,36,.18) inset, 0 18px 48px rgba(0,0,0,.50);
+    }
+
+    .duration{
+      position:absolute;
+      top:18px;
+      right:18px;
+      font-size:12px;
+      color:rgba(255,255,255,.70);
+      background:rgba(0,0,0,.22);
+      border:1px solid rgba(255,255,255,.14);
+      padding:8px 12px;
+      border-radius:999px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    /* ---------------- VIDEO ---------------- */
+    #videoView{ z-index:12; }
+
+    .videoTopRow{
+      position:absolute;
+      top:160px;
+      left:var(--safeX);
+      right:var(--safeX);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      z-index:25;
+      gap:18px;
+    }
+
+    .nowPlaying{
+      color:rgba(255,255,255,.72);
+      font-size:14px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      max-width:520px;
+      text-align:center;
+      flex:1;
+    }
+
+    .videoPanel{
+      position:absolute;
+      top:260px;
+      left:var(--safeX);
+      right:var(--safeX);
+      bottom:390px;
+      border-radius:28px;
+      background:
+        radial-gradient(900px 300px at 50% 0%, rgba(236,30,36,.12), transparent 62%),
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.12);
+      display:grid;
+      place-items:center;
+      color:rgba(255,255,255,.60);
+      font-size:14px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      padding:26px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow:var(--shadow);
+    }
+
+    .playlistDock{
+      position:absolute;
+      left:var(--safeX);
+      right:var(--safeX);
+      bottom:330px;
+      z-index:24;
+      display:none;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-start;
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:20px;
+      padding:12px 14px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow:0 16px 56px rgba(0,0,0,.45);
+    }
+
+    .playlistTitle{
+      font-size:12px;
+      color:rgba(255,255,255,.55);
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      margin-right:6px;
+      white-space:nowrap;
+    }
+
+    .pchip{
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.22);
+      color:rgba(255,255,255,.84);
+      padding:8px 10px;
+      border-radius:999px;
+      font-size:13px;
+      user-select:none;
+      white-space:nowrap;
+    }
+
+    .pchip.isCurrent{
+      background:rgba(236,30,36,.92);
+      color:var(--white);
+      border-color:rgba(236,30,36,.95);
+      box-shadow:0 0 18px rgba(236,30,36,.20);
+      font-weight:700;
+    }
+
+    .playbackDock{
+      position:absolute;
+      left:var(--safeX);
+      right:var(--safeX);
+      bottom:140px;
+      height:190px;
+      border-radius:26px;
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:0 18px 70px rgba(0,0,0,.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      display:none;
+      z-index:30;
+      padding:18px 22px;
+    }
+
+    .timeline{
+      height:8px;
+      border-radius:999px;
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.14);
+      overflow:hidden;
+      box-shadow:0 0 0 1px rgba(0,0,0,.18) inset;
+    }
+
+    .timelineFill{
+      height:100%;
+      width:35%;
+      background:linear-gradient(90deg, rgba(236,30,36,.35), rgba(236,30,36,.95), rgba(236,30,36,.35));
+    }
+
+    .timecodes{
+      margin-top:10px;
+      display:flex;
+      justify-content:space-between;
+      font-size:13px;
+      color:rgba(255,255,255,.62);
+    }
+
+    .controls{
+      margin-top:22px;
+      display:flex;
+      gap:26px;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .cbtn{
+      width:72px;
+      height:72px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.16);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+      transition:transform .12s ease, border-color .14s ease, box-shadow .14s ease;
+      user-select:none;
+    }
+    .cbtn:hover{
+      border-color:rgba(236,30,36,.55);
+      box-shadow:0 0 0 1px rgba(236,30,36,.22), 0 0 22px rgba(236,30,36,.12);
+    }
+    .cbtn:active{ transform:translateY(1px); }
+
+    .cicon{
+      font-size:26px;
+      color:rgba(255,255,255,.90);
+      transform:translateY(-1px);
+      line-height:1;
+    }
+
+    .cbtn.isActive{
+      border-color:rgba(236,30,36,.85);
+      box-shadow:0 0 0 1px rgba(236,30,36,.35), 0 0 30px rgba(236,30,36,.18);
+    }
+
+    /* ---------------- SCHEDULE MODAL ---------------- */
+    #scheduleModal{
+      position:absolute;
+      inset:0;
+      display:none;
+      z-index:80;
+    }
+    .backdrop{
+      position:absolute;
+      inset:0;
+      background:rgba(0,0,0,.70);
+    }
+    .modal{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      width:780px;
+      border-radius:26px;
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .modalHeader{
+      padding:18px 20px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      border-bottom:1px solid rgba(255,255,255,.10);
+    }
+    .modalHeader h3{
+      margin:0;
+      font-family:Orbitron, Inter, sans-serif;
+      font-size:15px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.92);
+    }
+    .modalBody{
+      padding:18px 20px 12px 20px;
+      color:rgba(255,255,255,.75);
+      font-size:14px;
+      line-height:1.55;
+    }
+    .formRow{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:14px;
+      margin-top:14px;
+    }
+    .field{
+      background:rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:14px;
+    }
+    .field label{
+      display:block;
+      font-size:12px;
+      color:rgba(255,255,255,.55);
+      margin-bottom:8px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+    .fakeInput{
+      height:44px;
+      border-radius:14px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      display:flex;
+      align-items:center;
+      padding:0 12px;
+      color:rgba(255,255,255,.88);
+      gap:10px;
+      user-select:none;
+      cursor:pointer;
+    }
+
+    .selectedList{
+      margin-top:16px;
+      background:rgba(0,0,0,.18);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:18px;
+      padding:14px;
+    }
+    .selectedListHeader{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:10px;
+      color:rgba(255,255,255,.55);
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+    }
+    .chipsList{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .selChip{
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.22);
+      color:rgba(255,255,255,.88);
+      padding:8px 10px;
+      border-radius:999px;
+      font-size:13px;
+      user-select:none;
+    }
+    .modalFooter{
+      padding:16px 20px;
+      display:flex;
+      justify-content:flex-end;
+      gap:12px;
+      border-top:1px solid rgba(255,255,255,.10);
+    }
+
+    /* ---------------- COUNTDOWN ---------------- */
+    #countdownView{ z-index:60; }
+    #countdownView .countWrap{
+      position:absolute;
+      left:var(--safeX);
+      right:var(--safeX);
+      top:300px;
+      bottom:300px;
+      display:grid;
+      place-items:center;
+      text-align:center;
+    }
+    .countCard{
+      width:100%;
+      max-width:740px;
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:28px;
+      padding:30px;
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .countTitle{
+      margin:0 0 12px 0;
+      font-size:12px;
+      color:rgba(255,255,255,.58);
+      letter-spacing:.18em;
+      text-transform:uppercase;
+    }
+    .countTime{
+      margin:0;
+      font-family:Orbitron, Inter, sans-serif;
+      font-size:68px;
+      font-weight:700;
+      letter-spacing:.06em;
+    }
+    .countMeta{
+      margin-top:14px;
+      color:rgba(255,255,255,.72);
+      line-height:1.6;
+      font-size:14px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="screen">
+
+    <!-- Brand Bar -->
+    <div class="brandbar">
+      <div class="brandWrap">
+        <div class="logoMark" aria-hidden="true"><span class="logoV2">V2</span></div>
+        <div class="brand">INDONESIA</div>
+      </div>
+
+      <div class="rightActions">
+        <button id="btnHome" class="btn btn-primary">Home</button>
+        <button id="btnGallery" class="btn">Gallery</button>
+        <button id="btnVideo" class="btn">Video</button>
+      </div>
+    </div>
+
+    <!-- HOME -->
+    <section id="homeView" class="view isActive">
+      <div class="homeCenter">
+        <div class="homeCard">
+          <p class="homeEyebrow">Idle / Attractor</p>
+          <h2 class="homeTitle">Showreel Kiosk</h2>
+          <p class="homeSub">
+            Tap anywhere to browse the gallery. Use Multi-Select to schedule a playlist and auto-play it.
+          </p>
+
+          <div class="idleBar"><div class="idleFill"></div></div>
+
+          <div class="homeActions">
+            <button id="tapToEnter" class="btn btn-primary">Enter Gallery</button>
+            <button id="simulateIdle" class="btn">Stay in Idle</button>
+          </div>
+
+          <div class="homeHint">Idle mode loops when there is no interaction.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section id="galleryView" class="view">
+      <div class="galleryTopRow">
+        <div class="filtersRow" id="filtersRow">
+          <div class="pill isActive" data-filter="All">All</div>
+          <div class="pill" data-filter="Event">Event</div>
+          <div class="pill" data-filter="Retail">Retail</div>
+          <div class="pill" data-filter="Corporate">Corporate</div>
+        </div>
+
+        <div class="galleryModeRow">
+          <div class="badge" id="modeBadge">Mode: Single Select</div>
+          <button id="enterMulti" class="btn">Multi-Select</button>
+          <button id="exitMulti" class="btn" style="display:none;">Exit Multi</button>
+        </div>
+      </div>
+
+      <div id="multiBar" class="multiBar">
+        <div>
+          <strong id="selCount">0</strong> selected
+          <span style="margin-left:12px; color:rgba(255,255,255,.55)">Select tiles, then Schedule.</span>
+        </div>
+        <div class="multiActions">
+          <button id="clearSel" class="btn">Clear</button>
+          <button id="openSchedule" class="btn btn-primary" disabled>Schedule</button>
+        </div>
+      </div>
+
+      <div class="galleryScroll" id="galleryScroll" aria-label="Content Gallery Scroll Area">
+        <div class="grid" id="grid"></div>
+      </div>
+    </section>
+
+    <!-- VIDEO -->
+    <section id="videoView" class="view">
+      <div class="videoTopRow">
+        <button id="backToGallery" class="btn">← Back</button>
+        <div id="nowPlaying" class="nowPlaying">Now Playing • —</div>
+        <button id="fullScreen" class="btn">Fullscreen (Mock)</button>
+      </div>
+
+      <div class="videoPanel">VIDEO SCREEN</div>
+
+      <div id="playlistDock" class="playlistDock">
+        <span class="playlistTitle">Scheduled Playlist</span>
+        <div id="playlistChips" style="display:flex; gap:10px; flex-wrap:wrap;"></div>
+      </div>
+
+      <div class="playbackDock" id="playbackDock">
+        <div class="timeline">
+          <div class="timelineFill" id="timelineFill"></div>
+        </div>
+        <div class="timecodes">
+          <span id="elapsed">00:00</span>
+          <span id="total">00:00</span>
+        </div>
+
+        <div class="controls">
+          <div id="btnPrev" class="cbtn" title="Previous" aria-label="Previous"><span class="cicon">⏮</span></div>
+          <div id="btnPlay" class="cbtn isActive" title="Play" aria-label="Play"><span class="cicon">▶</span></div>
+          <div id="btnPause" class="cbtn" title="Pause" aria-label="Pause"><span class="cicon">⏸</span></div>
+          <div id="btnNext" class="cbtn" title="Next" aria-label="Next"><span class="cicon">⏭</span></div>
+          <div id="btnVol" class="cbtn" title="Volume" aria-label="Volume"><span class="cicon">🔊</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCHEDULE MODAL -->
+    <section id="scheduleModal" aria-hidden="true">
+      <div class="backdrop" id="closeModal"></div>
+      <div class="modal" role="dialog" aria-modal="true" aria-label="Schedule">
+        <div class="modalHeader">
+          <h3>Schedule Playlist</h3>
+          <button id="cancelScheduleTop" class="btn">Close</button>
+        </div>
+
+        <div class="modalBody">
+          <div style="color:rgba(255,255,255,.72);">
+            Flow: Multi-Select → Schedule → Save → Countdown → Auto-play
+          </div>
+
+          <div class="formRow">
+            <div class="field">
+              <label>Date</label>
+              <div class="fakeInput" id="dateField">Tap to pick date (mock)</div>
+            </div>
+            <div class="field">
+              <label>Time</label>
+              <div class="fakeInput" id="timeField">Tap to pick time (mock)</div>
+            </div>
+          </div>
+
+          <div class="selectedList">
+            <div class="selectedListHeader">
+              <span>Selected videos</span>
+              <span id="selDurTotal">Total duration: —</span>
+            </div>
+            <div class="chipsList" id="selectedChips"></div>
+          </div>
+
+          <div style="margin-top:12px; color:rgba(255,255,255,.55); font-size:13px;">
+            Overlapping schedules allowed (mock).
+          </div>
+        </div>
+
+        <div class="modalFooter">
+          <button id="cancelSchedule" class="btn">Cancel</button>
+          <button id="saveSchedule" class="btn btn-primary" disabled>Save</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- COUNTDOWN -->
+    <section id="countdownView" class="view">
+      <div class="countWrap">
+        <div class="countCard">
+          <p class="countTitle">Countdown</p>
+          <p id="countTime" class="countTime">00:10</p>
+          <div class="countMeta" id="countMeta">Scheduled playlist will start automatically.</div>
+
+          <div style="margin-top:20px; display:flex; justify-content:center; gap:14px; flex-wrap:wrap;">
+            <button id="cancelCountdown" class="btn">Cancel</button>
+            <button id="skipCountdown" class="btn btn-primary">Start Now</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    // -------- Elements
+    const homeView = document.getElementById('homeView');
+    const galleryView = document.getElementById('galleryView');
+    const videoView = document.getElementById('videoView');
+    const countdownView = document.getElementById('countdownView');
+
+    const btnHome = document.getElementById('btnHome');
+    const btnGallery = document.getElementById('btnGallery');
+    const btnVideo = document.getElementById('btnVideo');
+
+    const tapToEnter = document.getElementById('tapToEnter');
+    const simulateIdle = document.getElementById('simulateIdle');
+
+    const enterMulti = document.getElementById('enterMulti');
+    const exitMulti = document.getElementById('exitMulti');
+    const modeBadge = document.getElementById('modeBadge');
+    const multiBar = document.getElementById('multiBar');
+    const selCount = document.getElementById('selCount');
+    const clearSel = document.getElementById('clearSel');
+    const openSchedule = document.getElementById('openSchedule');
+    const galleryScroll = document.getElementById('galleryScroll');
+    const grid = document.getElementById('grid');
+
+    const backToGallery = document.getElementById('backToGallery');
+    const nowPlaying = document.getElementById('nowPlaying');
+    const fullScreen = document.getElementById('fullScreen');
+
+    const playbackDock = document.getElementById('playbackDock');
+    const timelineFill = document.getElementById('timelineFill');
+    const elapsed = document.getElementById('elapsed');
+    const total = document.getElementById('total');
+
+    const btnPrev = document.getElementById('btnPrev');
+    const btnNext = document.getElementById('btnNext');
+    const btnPlay = document.getElementById('btnPlay');
+    const btnPause = document.getElementById('btnPause');
+    const btnVol = document.getElementById('btnVol');
+
+    const scheduleModal = document.getElementById('scheduleModal');
+    const closeModal = document.getElementById('closeModal');
+    const cancelSchedule = document.getElementById('cancelSchedule');
+    const cancelScheduleTop = document.getElementById('cancelScheduleTop');
+    const saveSchedule = document.getElementById('saveSchedule');
+    const selectedChips = document.getElementById('selectedChips');
+    const selDurTotal = document.getElementById('selDurTotal');
+    const dateField = document.getElementById('dateField');
+    const timeField = document.getElementById('timeField');
+
+    const countTime = document.getElementById('countTime');
+    const countMeta = document.getElementById('countMeta');
+    const cancelCountdown = document.getElementById('cancelCountdown');
+    const skipCountdown = document.getElementById('skipCountdown');
+
+    const playlistDock = document.getElementById('playlistDock');
+    const playlistChips = document.getElementById('playlistChips');
+
+    // -------- State
+    let currentView = 'home';
+    let previousView = 'home';
+    let multiMode = false;
+
+    const selectedIds = new Set();
+    const tileMeta = new Map();
+
+    let pickedDate = '';
+    let pickedTime = '';
+
+    let countdownTimer = null;
+    let countdownRemaining = 10;
+
+    let timelineTimer = null;
+    let isFs = false;
+
+    // Scheduled playlist runtime
+    let scheduledPlaylist = [];
+    let playlistIndex = 0;
+    let isPlaying = true;
+
+    // -------- Utilities
+    function setPrimary(btn, on){ btn.classList.toggle('btn-primary', !!on); }
+
+    function showView(name){
+      previousView = currentView;
+      currentView = name;
+
+      homeView.classList.toggle('isActive', name === 'home');
+      galleryView.classList.toggle('isActive', name === 'gallery');
+      videoView.classList.toggle('isActive', name === 'video');
+      countdownView.classList.toggle('isActive', name === 'countdown');
+
+      setPrimary(btnHome, name === 'home');
+      setPrimary(btnGallery, name === 'gallery');
+      setPrimary(btnVideo, name === 'video');
+
+      playbackDock.style.display = (name === 'video') ? 'block' : 'none';
+
+      if(name !== 'video') stopTimelineDemo();
+
+      if(name !== 'countdown' && countdownTimer){
+        clearInterval(countdownTimer);
+        countdownTimer = null;
+      }
+
+      if(name === 'gallery' && previousView === 'home'){
+        galleryScroll.scrollTop = 0;
+      }
+    }
+
+    function setMultiMode(on){
+      multiMode = !!on;
+      modeBadge.textContent = multiMode ? 'Mode: Multi-Select' : 'Mode: Single Select';
+      enterMulti.style.display = multiMode ? 'none' : 'inline-block';
+      exitMulti.style.display = multiMode ? 'inline-block' : 'none';
+      multiBar.style.display = multiMode ? 'flex' : 'none';
+
+      document.querySelectorAll('.thumb').forEach(tile=>{
+        tile.classList.toggle('isSelectable', multiMode);
+      });
+
+      if(!multiMode) clearSelection();
+      else updateMultiBar();
+    }
+
+    function clearSelection(){
+      selectedIds.clear();
+      document.querySelectorAll('.thumb').forEach(tile => tile.classList.remove('isSelected'));
+      updateMultiBar();
+    }
+
+    function updateMultiBar(){
+      selCount.textContent = String(selectedIds.size);
+      openSchedule.disabled = (selectedIds.size === 0);
+    }
+
+    function parseDurationToSeconds(d){
+      const parts = (d || '').split(':').map(n => parseInt(n,10));
+      if(parts.length === 2 && parts.every(x => !Number.isNaN(x))) return parts[0]*60 + parts[1];
+      if(parts.length === 3 && parts.every(x => !Number.isNaN(x))) return parts[0]*3600 + parts[1]*60 + parts[2];
+      return 0;
+    }
+
+    function formatSecondsToMMSS(sec){
+      const m = Math.floor(sec/60);
+      const s = sec % 60;
+      return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    }
+
+    function openScheduleModal(){
+      selectedChips.innerHTML = '';
+      let totalSec = 0;
+
+      [...selectedIds].forEach(id=>{
+        const meta = tileMeta.get(id);
+        if(!meta) return;
+        totalSec += parseDurationToSeconds(meta.duration);
+
+        const chip = document.createElement('div');
+        chip.className = 'selChip';
+        chip.textContent = `${meta.title} (${meta.duration})`;
+        selectedChips.appendChild(chip);
+      });
+
+      selDurTotal.textContent = `Total duration: ${formatSecondsToMMSS(totalSec)}`;
+      dateField.textContent = pickedDate ? pickedDate : 'Tap to pick date (mock)';
+      timeField.textContent = pickedTime ? pickedTime : 'Tap to pick time (mock)';
+      saveSchedule.disabled = !(pickedDate && pickedTime);
+
+      scheduleModal.style.display = 'block';
+      scheduleModal.setAttribute('aria-hidden','false');
+    }
+
+    function closeScheduleModal(){
+      scheduleModal.style.display = 'none';
+      scheduleModal.setAttribute('aria-hidden','true');
+    }
+
+    function startCountdown(){
+      closeScheduleModal();
+      showView('countdown');
+
+      countdownRemaining = 10;
+      updateCountdownUI();
+
+      if(countdownTimer) clearInterval(countdownTimer);
+      countdownTimer = setInterval(()=>{
+        countdownRemaining -= 1;
+        updateCountdownUI();
+        if(countdownRemaining <= 0){
+          clearInterval(countdownTimer);
+          countdownTimer = null;
+          autoPlayScheduledPlaylist();
+        }
+      }, 1000);
+    }
+
+    function updateCountdownUI(){
+      countTime.textContent = `00:${String(Math.max(countdownRemaining,0)).padStart(2,'0')}`;
+      const items = [...selectedIds].map(id => tileMeta.get(id)?.title).filter(Boolean);
+      const preview = items.slice(0,4).join(', ') + (items.length > 4 ? ` +${items.length-4} more` : '');
+      countMeta.textContent = `Scheduled: ${pickedDate || '—'} • ${pickedTime || '—'}. Playlist: ${preview || '—'}.`;
+    }
+
+    function startTimelineDemo(){
+      let p = 0;
+      stopTimelineDemo();
+      timelineTimer = setInterval(()=>{
+        if(currentView !== 'video') return;
+        if(!isPlaying) return;
+        p = (p + 1) % 101;
+        timelineFill.style.width = p + '%';
+        const sec = Math.floor((p/100) * 180);
+        elapsed.textContent = formatSecondsToMMSS(sec);
+      }, 120);
+    }
+
+    function stopTimelineDemo(){
+      if(timelineTimer){
+        clearInterval(timelineTimer);
+        timelineTimer = null;
+      }
+    }
+
+    function playSingleVideo(tileId){
+      const meta = tileMeta.get(tileId);
+      scheduledPlaylist = [];
+      playlistDock.style.display = 'none';
+
+      nowPlaying.textContent = `Now Playing • ${meta?.title || 'Video'}`;
+      total.textContent = meta?.duration || '03:18';
+
+      isPlaying = true;
+      btnPlay.classList.add('isActive');
+      btnPause.classList.remove('isActive');
+
+      showView('video');
+      startTimelineDemo();
+    }
+
+    function renderPlaylistDock(){
+      playlistChips.innerHTML = '';
+      scheduledPlaylist.forEach((id, idx)=>{
+        const meta = tileMeta.get(id);
+        const chip = document.createElement('span');
+        chip.className = 'pchip' + (idx === playlistIndex ? ' isCurrent' : '');
+        chip.textContent = meta?.title || `Video ${idx+1}`;
+        playlistChips.appendChild(chip);
+      });
+      playlistDock.style.display = scheduledPlaylist.length ? 'flex' : 'none';
+    }
+
+    function setPlaylistIndex(nextIndex){
+      if(!scheduledPlaylist.length) return;
+      playlistIndex = (nextIndex + scheduledPlaylist.length) % scheduledPlaylist.length;
+
+      const id = scheduledPlaylist[playlistIndex];
+      const meta = tileMeta.get(id);
+
+      nowPlaying.textContent = `Now Playing • ${meta?.title || 'Video'} (Scheduled)`;
+      total.textContent = meta?.duration || '03:18';
+
+      renderPlaylistDock();
+      startTimelineDemo();
+    }
+
+    function autoPlayScheduledPlaylist(){
+      scheduledPlaylist = [...selectedIds].sort((a,b)=>{
+        const na = parseInt((tileMeta.get(a)?.title || '').replace(/\D/g,''),10) || 0;
+        const nb = parseInt((tileMeta.get(b)?.title || '').replace(/\D/g,''),10) || 0;
+        return na - nb;
+      });
+
+      playlistIndex = 0;
+
+      isPlaying = true;
+      btnPlay.classList.add('isActive');
+      btnPause.classList.remove('isActive');
+
+      showView('video');
+      renderPlaylistDock();
+      setPlaylistIndex(0);
+    }
+
+    function toggleFullscreenMock(){
+      isFs = !isFs;
+      fullScreen.textContent = isFs ? 'Exit Fullscreen (Mock)' : 'Fullscreen (Mock)';
+      document.querySelector('.screen').style.borderColor = isFs ? 'rgba(236,30,36,.55)' : 'rgba(255,255,255,.08)';
+    }
+
+    // -------- Build Gallery Tiles
+    function buildTiles(){
+      grid.innerHTML = '';
+
+      const durations = [
+        "02:15","03:18","01:42","04:05","02:58","03:40",
+        "02:03","01:55","03:11","02:47","04:22","01:29"
+      ];
+
+      for(let i=1;i<=30;i++){
+        const id = `tile-${i}`;
+        const title = `Video ${String(i).padStart(2,'0')}`;
+        const duration = durations[(i-1) % durations.length];
+
+        tileMeta.set(id, { title, duration });
+
+        const tile = document.createElement('div');
+        tile.className = 'thumb';
+        tile.setAttribute('data-id', id);
+        tile.innerHTML = `
+          <div class="check">✓</div>
+          <div class="duration">${duration}</div>
+          <div class="thumbLabel">${title}</div>
+        `;
+
+        tile.addEventListener('click', ()=>{
+          if(multiMode){
+            const isSelected = tile.classList.toggle('isSelected');
+            if(isSelected) selectedIds.add(id);
+            else selectedIds.delete(id);
+            updateMultiBar();
+          } else {
+            playSingleVideo(id);
+          }
+        });
+
+        grid.appendChild(tile);
+      }
+    }
+
+    // -------- Filters (visual only)
+    document.querySelectorAll('.pill').forEach(p=>{
+      p.addEventListener('click', ()=>{
+        document.querySelectorAll('.pill').forEach(x=>x.classList.remove('isActive'));
+        p.classList.add('isActive');
+      });
+    });
+
+    // -------- Events
+    btnHome.addEventListener('click', ()=> showView('home'));
+    btnGallery.addEventListener('click', ()=> showView('gallery'));
+    btnVideo.addEventListener('click', ()=> showView('video'));
+
+    tapToEnter.addEventListener('click', ()=> showView('gallery'));
+
+    homeView.addEventListener('click', (e)=>{
+      if(e.target.closest('button')) return;
+      showView('gallery');
+    });
+    simulateIdle.addEventListener('click', ()=> showView('home'));
+
+    enterMulti.addEventListener('click', ()=> setMultiMode(true));
+    exitMulti.addEventListener('click', ()=> setMultiMode(false));
+    clearSel.addEventListener('click', clearSelection);
+
+    openSchedule.addEventListener('click', ()=>{
+      if(selectedIds.size > 0) openScheduleModal();
+    });
+
+    backToGallery.addEventListener('click', ()=> showView('gallery'));
+    fullScreen.addEventListener('click', toggleFullscreenMock);
+
+    btnPrev.addEventListener('click', ()=> {
+      if(scheduledPlaylist.length) setPlaylistIndex(playlistIndex - 1);
+    });
+    btnNext.addEventListener('click', ()=> {
+      if(scheduledPlaylist.length) setPlaylistIndex(playlistIndex + 1);
+    });
+
+    btnPlay.addEventListener('click', ()=> {
+      isPlaying = true;
+      btnPlay.classList.add('isActive');
+      btnPause.classList.remove('isActive');
+      if(!timelineTimer) startTimelineDemo();
+    });
+    btnPause.addEventListener('click', ()=> {
+      isPlaying = false;
+      btnPause.classList.add('isActive');
+      btnPlay.classList.remove('isActive');
+    });
+
+    btnVol.addEventListener('click', ()=> {
+      const icon = btnVol.querySelector('.cicon');
+      icon.textContent = (icon.textContent === '🔊') ? '🔇' : '🔊';
+    });
+
+    closeModal.addEventListener('click', closeScheduleModal);
+    cancelSchedule.addEventListener('click', closeScheduleModal);
+    cancelScheduleTop.addEventListener('click', closeScheduleModal);
+
+    dateField.addEventListener('click', ()=>{
+      pickedDate = pickedDate ? '' : '2025-11-12';
+      dateField.textContent = pickedDate ? pickedDate : 'Tap to pick date (mock)';
+      saveSchedule.disabled = !(pickedDate && pickedTime);
+    });
+    timeField.addEventListener('click', ()=>{
+      pickedTime = pickedTime ? '' : '19:30';
+      timeField.textContent = pickedTime ? pickedTime : 'Tap to pick time (mock)';
+      saveSchedule.disabled = !(pickedDate && pickedTime);
+    });
+
+    saveSchedule.addEventListener('click', ()=>{
+      if(!(pickedDate && pickedTime)) return;
+      startCountdown();
+    });
+
+    cancelCountdown.addEventListener('click', ()=>{
+      if(countdownTimer) clearInterval(countdownTimer);
+      countdownTimer = null;
+      showView('gallery');
+    });
+    skipCountdown.addEventListener('click', ()=>{
+      if(countdownTimer) clearInterval(countdownTimer);
+      countdownTimer = null;
+      autoPlayScheduledPlaylist();
+    });
+
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape' && scheduleModal.style.display === 'block'){
+        closeScheduleModal();
+      }
+    });
+
+    // -------- Init
+    buildTiles();
+    setMultiMode(false);
+    showView('home');
+  </script>
+</body>
+</html>
